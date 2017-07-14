@@ -1,3 +1,2 @@
-# bondPricer
- Bond pricer bootsrap/d3js exploration to embed in a  course
- Databits.io style
+# Stock Variation
+ D3 visualization with PHP backend for data
