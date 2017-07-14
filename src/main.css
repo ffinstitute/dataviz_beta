@@ -1,2 +1,9 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.css";
 @import "../node_modules/daterangepicker/daterangepicker.css";
+
+#graphDiv .dot {
+    fill: #FFF;
+    fill-opacity: 0;
+    stroke: #000;
+    stroke-opacity: 0.5;
+}
