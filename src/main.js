@@ -7,6 +7,9 @@ var d3 = require("d3");
 var moment = require("moment");
 var daterangepicker = require("daterangepicker");
 
+// dev env
+window.d3 = d3;
+window.moment = moment;
 
 $(document).ready(function () {
     /**
@@ -28,6 +31,10 @@ $(document).ready(function () {
 
     var min_date, max_date;
 
+    var company_prices, exchange_prices,
+        company_variations = [],
+        exchange_variations = [];
+
     // initiate date picker
     $date_range_picker.daterangepicker({
         locale: {
@@ -37,11 +44,9 @@ $(document).ready(function () {
             return !!(min_date && date < moment(min_date) || max_date && date > moment(max_date));
 
         },
-        autoApply: true,
-        dateLimit: moment.duration(31, 'days')
-    }, function (start, end, label) {
-        // update data table
-        $data_table.find("tbody").empty();
+        autoApply: true
+    }, function (start_date, end_date, label) {
+        calculateVariations(start_date, end_date);
     });
 
 
@@ -56,6 +61,9 @@ $(document).ready(function () {
 
         // update date range picker
         loadAvailableDateRange();
+
+        // pre-load price data
+        preLoadPriceData();
     });
 
     $exchange_select.on('change', function () {
@@ -68,6 +76,9 @@ $(document).ready(function () {
 
         // update date range picker
         loadAvailableDateRange();
+
+        // pre-load price data
+        preLoadPriceData();
     });
 
 
@@ -76,7 +87,6 @@ $(document).ready(function () {
     loadExchanges();
 
     // functions
-
     function loadCompanies() {
         $company_select.find("option.option").remove();
 
@@ -107,7 +117,7 @@ $(document).ready(function () {
 
     function loadAvailableDateRange() {
         displayDatePicker(false); //hide when we are getting data
-        // now we have both values
+
         if (selected_company_id <= 0) {
             return console.info("Company not selected, abort updating date range");
         }
@@ -116,16 +126,18 @@ $(document).ready(function () {
             return console.info("Exchange not selected, abort updating date range");
         }
 
+        // now we have both values
+
         $.get("./backend",
             {
                 item: "available_date_range",
                 company_id: selected_company_id,
                 exchange: selected_exchange
-            }, function (result) {
-                console.log(result);
+            }, function (response) {
+                console.log(response);
 
-                if (result && result['success']) {
-                    var date_range = result['date_range'];
+                if (response && response['success']) {
+                    var date_range = response['date_range'];
                     updateAvailableDateRange(date_range['start_date'], date_range['end_date']);
                 }
             })
@@ -141,33 +153,12 @@ $(document).ready(function () {
         }
         if (moment(new_max_date).isValid()) {
             max_date = new_max_date;
-
-            // we can't use min_date here because the range will be too large to display
-            $date_range_picker.data('daterangepicker').setStartDate(moment(max_date).subtract(31, "days"));
-            $date_range_picker.data('daterangepicker').setEndDate(max_date);
         }
 
-    }
+        $date_range_picker.data('daterangepicker').setStartDate(min_date);
+        $date_range_picker.data('daterangepicker').setEndDate(max_date);
 
-    function truncateDateRange(original_start_date, original_end_date, max_days, to_earliest) {
-        var diff_days = moment(original_end_date).diff(moment(original_start_date), 'days'),
-            new_start_date = original_start_date,
-            new_end_date = original_end_date;
-
-        if (diff_days > max_days) {
-            if (to_earliest) {
-                new_start_date = original_start_date;
-                new_end_date = moment(original_start_date).add(max_days, 'days').format("YYYY-MM-DD");
-            } else {
-                new_start_date = moment(original_end_date).subtract(max_days, 'days').format("YYYY-MM-DD");
-                new_end_date = original_end_date;
-            }
-        }
-
-        return {
-            start_date: new_start_date,
-            end_date: new_end_date
-        }
+        calculateVariations(min_date, max_date);
     }
 
     function displayDatePicker(is_shown) {
@@ -176,6 +167,79 @@ $(document).ready(function () {
         } else {
             $date_range_picker.hide();
         }
+    }
+
+    function calculateVariations(start_date, end_date, retry_count) {
+        if (retry_count) {
+            if (retry_count > 0) retry_count--;
+            else return false;
+        } else retry_count = 100; // no more retry if fail after 10s
+
+        $data_table.find("tbody").empty();
+
+        if (company_prices && exchange_prices) {
+            // really displaying
+            var prev_company_price, prev_exchange_price,
+                rows = [];
+            company_variations = exchange_variations = []; // empty variation arrays
+
+            $.each(d3.timeDay.range(moment(start_date), moment(end_date).add(1, "day")), function () {
+                var date_str = moment(this).format("YYYY-MM-DD"),
+                    company_price = company_prices[date_str],
+                    exchange_price = exchange_prices[date_str],
+                    company_variation = "",
+                    exchange_variation = "";
+
+                if (company_price && exchange_price) { // some dates have no prices, like holidays
+                    if (prev_company_price) {
+                        company_variation = ((company_price - prev_company_price) / prev_company_price * 100).toFixed(2);
+                        company_variations.push({date: date_str, variation: company_variation});
+                    }
+                    if (prev_exchange_price) {
+                        exchange_variation = ((exchange_price - prev_exchange_price) / prev_exchange_price * 100).toFixed(2);
+                        exchange_variations.push({date: date_str, variation: exchange_variation});
+                    }
+
+                    prev_company_price = company_price;
+                    prev_exchange_price = exchange_price;
+
+                    rows.push("<tr><td>" + date_str + "</td><td>" + company_price + "</td><td>" + company_variation
+                        + "</td><td>" + exchange_price + "</td><td>" + exchange_variation + "</td></tr>"); // just for dev #TODO: remove table
+                }
+            });
+            $data_table.find("tbody").append(rows.reverse());
+        } else {
+            return setTimeout(function () {
+                calculateVariations(start_date, end_date, retry_count);
+            }, 100);
+        }
+    }
+
+    function preLoadPriceData() {
+        company_prices = exchange_prices = null; // clean data
+
+        if (selected_company_id <= 0) {
+            return console.info("Company not selected, abort updating date range");
+        }
+
+        if (!selected_exchange) {
+            return console.info("Exchange not selected, abort updating date range");
+        }
+
+        $.get("./backend",
+            {
+                item: "price_data",
+                company_id: selected_company_id,
+                exchange: selected_exchange
+            }, function (response) {
+                if (response && response['success']) {
+                    company_prices = response['company_prices'];
+                    exchange_prices = response['exchange_prices'];
+
+
+                }
+            }
+        );
     }
 
 });

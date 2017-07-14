@@ -45,4 +45,41 @@ class StockVariation
             return false;
         }
     }
+
+    function getCompanyPrices($company_id = 0)
+    {
+        $company_id = round($company_id);
+        if ($company_id) {
+            $stmt = $this->db->query("SELECT `date`,`close_last` FROM `nasdaq`.`historical_company` WHERE "
+                . "`company_id`=$company_id ORDER BY `date` DESC;");
+
+            $prices = [];
+            while ($q = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $prices[$q['date']] = $q['close_last'];
+            }
+
+            return $prices;
+        } else {
+            return false;
+        }
+    }
+
+    function getExchangePrices($exchange_type = "")
+    {
+        if ($exchange_type) {
+
+            $stmt = $this->db->query("SELECT * FROM `nasdaq`.`historical_exchange` WHERE `type`="
+                . $this->db->quote($exchange_type) . " ORDER BY `date` desc;");
+
+            $prices = [];
+            while ($q = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $prices[$q['date']] = $q['price'];
+            }
+
+            return $prices;
+        } else {
+            return false;
+        }
+
+    }
 }

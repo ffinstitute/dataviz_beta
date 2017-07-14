@@ -31,6 +31,15 @@ switch (@$_GET['item']) {
         sendResponse(['success' => $date_range !== false, 'date_range' => $date_range]);
         break;
 
+    case 'price_data':
+        $company_prices = $SV->getCompanyPrices($_GET['company_id']);
+        $exchange_prices = $SV->getExchangePrices($_GET['exchange']);
+        sendResponse([
+            'success' => $company_prices && $exchange_prices,
+            'company_prices' => $company_prices,
+            'exchange_prices' => $exchange_prices
+        ]);
+        break;
     default:
         sendResponse($_GET);
 }
