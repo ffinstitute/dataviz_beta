@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css" crossorigin="anonymous">-->
+
+    <!-- Font awesome cdn -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
+
+
+    <link rel="shortcut icon" href="img/favicon.jpg">
+
+
+    <script src="build/bundle.js"></script>
+
+    <style>
+
+    </style>
+    <title>Bond Pricer</title>
+</head>
+
+<body>
+<div class='container-fluid'>
+
+    <input type='hidden' id='student_id'>
+
+    <h2>
+        <a href='https://first-finance.institute' title='First Finance Institute' target=_blank><img
+                src='img/logo_ffi_32px.png' title='First Finance Institute' style="vertical-align: top"></a>
+        <span id='title'>Stock Variation</span>
+    </h2>
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div id="selections-div">
+                <div class="form-group">
+                    <label for="company-select">Select Company:</label>
+                    <select class="form-control" id="company-select">
+                        <option selected="selected" value="">Please choose</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exchange-select">Select Exchange:</label>
+                    <select class="form-control" id="exchange-select">
+                        <option selected="selected" value="">Please choose</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date-select">Select Date Range (max 31 days):</label>
+                    <input type="text" name="date-range" class="form-control" id="date-select" readonly="readonly"
+                           style="display: none;"/>
+                </div>
+            </div>
+            <table class='table table-nowrap table-condensed' id="data-table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th class="company" colspan="2"><span class="text-muted">(Choose Company)</span><span
+                            class="name"></span>
+                    </th>
+                    <th class="exchange" colspan="2"><span class="text-muted">(Choose Exchange)</span><span
+                            class="name"></span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Variation</th>
+                    <th>Price</th>
+                    <th>Variation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th><span class="text-muted">(Choose Date)</span></th>
+                    <td class="right"></td>
+                    <td class="right"></td>
+                    <td class="right"></td>
+                    <td class="right"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='col-xs-6'>
+        </div>
+    </div>
+
+    <div class="col-xs-12" id='graphDiv' style='padding:0'>
+        <!-- graph goes here -->
+    </div>
+
+</div>
+</body>
+</html>

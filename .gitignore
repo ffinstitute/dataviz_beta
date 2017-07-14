@@ -1,0 +1,9 @@
+/vendor/*
+.idea/*
+credential.*
+node_modules/*
+g
+
+
+# Mac System File
+.DS_Store
