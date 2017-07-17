@@ -28,7 +28,8 @@ $(document).ready(function () {
         exchange_variations = [],
         min_date, max_date,
         diagram_data = [],
-        start_date, end_date;
+        start_date, end_date,
+        beta, correlation;
 
     // initiate date pickers
     $start_date.datepicker({
@@ -317,8 +318,8 @@ $(document).ready(function () {
             var variance = math_func.variance(exchange_variation_array);
             console.info("vari", variance);
 
-            var beta = covariance / variance;
-            var correlation = math_func.correlation(company_variation_array, exchange_variation_array);
+            beta = covariance / variance;
+            correlation = math_func.correlation(company_variation_array, exchange_variation_array);
             console.info("corr", correlation);
 
             // update
@@ -374,7 +375,7 @@ $(document).ready(function () {
         x.domain([-x_max_abs, x_max_abs]);
         y.domain([-y_max_abs, y_max_abs]);
 
-        // Add the scatterplot
+        // Update the scatterplot
         var dots = svg.selectAll("circle").data(data);
 
         dots.enter().append("circle")
@@ -412,11 +413,20 @@ $(document).ready(function () {
             })
             .merge(dots);
 
-        // Add the X Axis
+        // Update line
+        svg.selectAll("line").remove();
+        svg.append("line")
+            .attr("x1", x(-x_max_abs))
+            .attr("y1", y(-beta * x_max_abs))
+            .attr("x2", x(x_max_abs)) // variation is change in percentage, which cannot exceed 100
+            .attr("y2", y(beta * x_max_abs))
+            .attr("class", "beta-line");
+
+        // Update the X Axis
         svg.select(".x-axis")
             .call(d3.axisBottom(x));
 
-        // Add the Y Axis
+        // Update the Y Axis
         svg.select(".y-axis")
             .call(d3.axisLeft(y));
     }

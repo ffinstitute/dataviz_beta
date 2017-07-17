@@ -69,6 +69,11 @@ th.date {
 
 #graphDiv .dot.hover {
     stroke-opacity: 1;
-    fill-opacity:0.9;
+    fill-opacity: 0.9;
     stroke-width: 2px;
+}
+
+line.beta-line {
+    stroke-width: 2px;
+    stroke: rgba(228, 0, 0, 0.64);
 }
