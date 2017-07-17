@@ -191,7 +191,8 @@ $(document).ready(function () {
                     exchange_price = exchange_prices[date_str],
                     company_variation, exchange_variation;
 
-                if (company_price && exchange_price) { // some dates have no prices, like holidays
+                if (company_price && exchange_price && $.isNumeric(company_price), $.isNumeric(exchange_price)) {
+                    // some dates have no prices, like holidays
                     if (prev_company_price && prev_exchange_price) {
                         company_variation = (company_price / prev_company_price - 1) * 100;
                         company_variations.push({date: date_str, variation: company_variation});
