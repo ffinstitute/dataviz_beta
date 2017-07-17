@@ -35914,8 +35914,8 @@ $(document).ready(function () {
 
             $.each(d3.timeDay.range(moment(start_date), moment(end_date).add(1, "day")), function () {
                 var date_str = moment(this).format("YYYY-MM-DD"),
-                    company_price = company_prices[date_str],
-                    exchange_price = exchange_prices[date_str],
+                    company_price = parseFloat(company_prices[date_str]),
+                    exchange_price = parseFloat(exchange_prices[date_str]),
                     company_variation, exchange_variation;
 
                 if (company_price && exchange_price && $.isNumeric(company_price), $.isNumeric(exchange_price)) {
