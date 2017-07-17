@@ -1,5 +1,5 @@
-@import "../node_modules/bootstrap/dist/css/bootstrap.css";
-@import "../node_modules/daterangepicker/daterangepicker.css";
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css";
 
 .table-condensed-extreme > thead > tr > th, .table-condensed-extreme > tbody > tr > th, .table-condensed-extreme > tfoot > tr > th,
 .table-condensed-extreme > thead > tr > td, .table-condensed-extreme > tbody > tr > td,

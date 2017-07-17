@@ -18,7 +18,7 @@
     <style>
 
     </style>
-    <title>Bond Pricer</title>
+    <title>Beta</title>
 </head>
 
 <body>
@@ -29,31 +29,52 @@
     <h2>
         <a href='https://first-finance.institute' title='First Finance Institute' target=_blank><img
                 src='img/logo_ffi_32px.png' title='First Finance Institute' style="vertical-align: top"></a>
-        <span id='title'>Stock Variation</span>
+        <span id='title'>Beta</span>
     </h2>
     <hr/>
 
     <div class="row">
-        <div class="col-xs-6">
-            <div id="selections-div">
-                <div class="form-group">
-                    <label for="company-select">Select Company:</label>
-                    <select class="form-control" id="company-select">
-                        <option selected="selected" value="">Please choose</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="exchange-select">Select Exchange:</label>
-                    <select class="form-control" id="exchange-select">
-                        <option selected="selected" value="">Please choose</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="date-select">Select Date Range:</label>
-                    <input type="text" name="date-range" class="form-control" id="date-select" readonly="readonly"
-                           style="display: none;"/>
-                </div>
+        <!--selections-->
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label for="exchange-select">Exchange:</label>
+                <select class="form-control" id="exchange-select">
+                    <option selected="selected" value="">Please choose</option>
+                </select>
             </div>
+        </div>
+        <div class="form-group col-xs-3">
+            <label for="company-select">Company:</label>
+            <select class="form-control" id="company-select">
+                <option selected="selected" value="">Please choose</option>
+            </select>
+        </div>
+        <div class="form-group col-xs-3">
+            <label for="start-date">Start Date:</label>
+            <div class="input-group">
+                <input type="text" name="start-date" class="form-control" id="start-date" readonly="readonly"
+                       placeholder="Start Date"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default set-start-date-min" type="button" title="Set to earliest"><span
+                            class="glyphicon glyphicon-fast-backward"></span></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-xs-3">
+            <label for="end-date">End Date:</label>
+            <div class="input-group">
+                <input type="text" name="end-date" class="form-control" id="end-date" readonly="readonly"
+                       placeholder="End Date"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default set-end-date-max" type="button" title="Set to latest"><span
+                            class="glyphicon glyphicon-fast-forward"></span></button>
+                </span>
+            </div>
+        </div>
+        <!--end of selections-->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             <table class="table table-nowrap table-condensed">
                 <tbody>
                 <tr>
@@ -66,15 +87,25 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div id="tooltip" class="hidden">
+            <p class="date"></p>
+        </div>
+        <div class='col-xs-12' id='graphDiv' style='padding:0'>
+            <!-- graph goes here -->
+        </div>
+
+        <div class="col-lg-12">
             <div class="table-wrapper">
                 <table class='table table-nowrap table-condensed-extreme' id="data-table">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th colspan="2"></th>
                         <th class="company" colspan="2"><span class="text-muted">(Choose Company)</span><span
                                 class="name"></span>
                         </th>
-                        <th class="exchange" colspan="2"><span class="text-muted">(Choose Exchange)</span><span
+                        <th class="exchange" colspan="1"><span class="text-muted">(Choose Exchange)</span><span
                                 class="name"></span>
                         </th>
                     </tr>
@@ -97,12 +128,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div id="tooltip" class="hidden">
-            <p class="date"></p>
-        </div>
-        <div class='col-xs-6' id='graphDiv' style='padding:0'>
-            <!-- graph goes here -->
         </div>
     </div>
 </div>

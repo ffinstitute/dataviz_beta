@@ -5,49 +5,48 @@ require("bootstrap");
 var css = require('./main.css');
 var d3 = require("d3");
 var moment = require("moment");
-var daterangepicker = require("daterangepicker");
+var datepicker = require("bootstrap-datepicker");
 var math_func = require('./math_func.js');
 
 console.log(math_func);
 
-// dev env #TODO: remove these two lines
+// dev env #TODO: remove these lines
 window.d3 = d3;
 window.moment = moment;
 window.math_func = math_func;
 
 $(document).ready(function () {
-    /**
-     * Some tests
-     */
-    // console.log($("div").length);
-    // console.log(d3);
-    // console.log(1251);
-    /***********/
-
-
     var $company_select = $("#company-select"),
         $exchange_select = $("#exchange-select"),
         $data_table = $("#data-table"),
-        $date_range_picker = $('input[name="date-range"]'),
+        $start_date = $('#start-date'),
+        $end_date = $('#end-date'),
         selected_company_id = 0,
         selected_exchange = "",
         company_prices, exchange_prices,
         company_variations = [],
         exchange_variations = [],
         min_date, max_date,
-        diagram_data = [];
+        diagram_data = [],
+        start_date, end_date;
 
-    // initiate date picker
-    $date_range_picker.daterangepicker({
-        locale: {
-            format: 'YYYY-MM-DD'
-        },
-        isInvalidDate: function (date) {
-            return !!(min_date && date < moment(min_date) || max_date && date > moment(max_date));
-        },
-        autoApply: true
-    }, function (start_date, end_date, label) {
-        calculateVariations(start_date, end_date);
+    // initiate date pickers
+    $start_date.datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    }).on('changeDate', function (e) {
+        start_date = e['date'];
+        validateAndUpdateSelectedDates(start_date);
+        calculateVariations();
+    });
+
+    $end_date.datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    }).on('changeDate', function (e) {
+        end_date = e['date'];
+        validateAndUpdateSelectedDates(null, end_date);
+        calculateVariations();
     });
 
 
@@ -65,6 +64,14 @@ $(document).ready(function () {
 
         // pre-load price data
         preLoadPriceData();
+    });
+
+    $("button.set-start-date-min").click(function () {
+        setStartDate(min_date);
+    });
+
+    $("button.set-end-date-max").click(function () {
+        setEndDate(max_date);
     });
 
     $exchange_select.on('change', function () {
@@ -117,7 +124,7 @@ $(document).ready(function () {
     }
 
     function loadAvailableDateRange() {
-        displayDatePicker(false); //hide when we are getting data
+        enableDatePicker(false); //disable when we are getting data
 
         if (selected_company_id <= 0) {
             return console.info("Company not selected, abort updating date range");
@@ -143,7 +150,7 @@ $(document).ready(function () {
                 }
             })
             .always(function () {
-                displayDatePicker(true);
+                enableDatePicker(true);
             });
     }
 
@@ -155,21 +162,58 @@ $(document).ready(function () {
             max_date = new_max_date;
         }
 
-        $date_range_picker.data('daterangepicker').setStartDate(min_date);
-        $date_range_picker.data('daterangepicker').setEndDate(max_date);
+        /**
+         * !!! Caution: the following "StartDate" ans "EndDate" named by the datepicker plugin author means dates that
+         * are available to choose from, which is totally different from variables with similar names elsewhere in this
+         * project, e.g. start_date & end_date, which means the dates user actually choose.
+         */
+        $start_date.datepicker('setStartDate', min_date);
+        $start_date.datepicker('setEndDate', max_date);
+        $end_date.datepicker('setStartDate', min_date);
+        $end_date.datepicker('setEndDate', max_date);
 
-        calculateVariations(min_date, max_date);
+        setStartDate(min_date);
+        setEndDate(max_date);
+        calculateVariations();
     }
 
-    function displayDatePicker(is_shown) {
-        if (is_shown) {
-            $date_range_picker.show();
-        } else {
-            $date_range_picker.hide();
+
+    /***
+     * @param new_start_date
+     * @param new_end_date
+     *
+     * When new date is selected, we check the other date and update accordingly to keep them a valid date range
+     */
+    function validateAndUpdateSelectedDates(new_start_date, new_end_date) {
+
+        if (new_start_date) {
+            if (moment(new_start_date) > moment(end_date)) {
+                setEndDate(new_start_date);
+            }
+        } else if (new_end_date) {
+            if (moment(start_date) > moment(new_end_date)) {
+                setStartDate(new_end_date);
+            }
         }
     }
 
-    function calculateVariations(start_date, end_date, retry_count) {
+    // only use these set methods to ensure data integrity between UI and internal
+    function setStartDate(new_start_date) {
+        start_date = new_start_date;
+        $start_date.datepicker('setDate', new_start_date);
+    }
+
+    function setEndDate(new_end_date) {
+        end_date = new_end_date;
+        $end_date.datepicker('setDate', new_end_date);
+    }
+
+    function enableDatePicker(is_enabled) {
+        $start_date.toggleClass("disabled", !!is_enabled);
+        $end_date.toggleClass("disabled", !!is_enabled);
+    }
+
+    function calculateVariations(retry_count) {
         if (retry_count) {
             if (retry_count > 0) retry_count--;
             else return false;
@@ -222,7 +266,7 @@ $(document).ready(function () {
             plotDiagram(diagram_data);
         } else {
             return setTimeout(function () {
-                calculateVariations(start_date, end_date, retry_count);
+                calculateVariations(retry_count);
             }, 100);
         }
     }
@@ -286,9 +330,11 @@ $(document).ready(function () {
     /**********************
      * D3 Graph
      */
+    var outer_width = 500,
+        outer_height = 500;
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 500 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = outer_width - margin.left - margin.right,
+        height = outer_height - margin.top - margin.bottom;
 
 
     var x = d3.scaleLinear().range([0, width]);
@@ -298,6 +344,7 @@ $(document).ready(function () {
     var svg = d3.select("#graphDiv").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .style("margin-left", ($(document).width() - outer_width) / 2)
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
