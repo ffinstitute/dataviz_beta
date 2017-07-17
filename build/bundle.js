@@ -36532,7 +36532,8 @@ $(document).ready(function () {
                     .style("top", cy + "px")
                     .classed("hidden", false)
                     .select(".date")
-                    .text(d['date']);
+                    .html(d['date'] + "<br>(" + parseFloat(d['company_variation']).toFixed(2) + ", "
+                        + parseFloat(d['exchange_variation']).toFixed(2) + ")");
             })
             .on("mouseout", function () {
                 // handle dot
