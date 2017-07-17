@@ -54,42 +54,49 @@
                            style="display: none;"/>
                 </div>
             </div>
-            <table class='table table-nowrap table-condensed-extreme' id="data-table">
-                <thead>
-                <tr>
-                    <td></td>
-                    <td>Beta</td>
-                    <td class="beta"></td>
-                    <td>Correlation coefficient</td>
-                    <td class="correlation-coefficient"></td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th class="company" colspan="2"><span class="text-muted">(Choose Company)</span><span
-                            class="name"></span>
-                    </th>
-                    <th class="exchange" colspan="2"><span class="text-muted">(Choose Exchange)</span><span
-                            class="name"></span>
-                    </th>
-                </tr>
-                <tr>
-                    <th>Date</th>
-                    <th>Price</th>
-                    <th>Variation</th>
-                    <th>Price</th>
-                    <th>Variation</th>
-                </tr>
-                </thead>
+            <table class="table table-nowrap table-condensed">
                 <tbody>
                 <tr>
-                    <th><span class="text-muted">(Choose Date)</span></th>
-                    <td class="right"></td>
-                    <td class="right"></td>
-                    <td class="right"></td>
-                    <td class="right"></td>
+                    <th>Beta</th>
+                    <td></td>
+                    <td class="beta"></td>
+                    <th>Correlation coefficient</th>
+                    <td class="correlation-coefficient"></td>
+                    <td></td>
                 </tr>
                 </tbody>
             </table>
+            <div class="table-wrapper">
+                <table class='table table-nowrap table-condensed-extreme' id="data-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="company" colspan="2"><span class="text-muted">(Choose Company)</span><span
+                                class="name"></span>
+                        </th>
+                        <th class="exchange" colspan="2"><span class="text-muted">(Choose Exchange)</span><span
+                                class="name"></span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th>Variation</th>
+                        <th>Price</th>
+                        <th>Variation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th><span class="text-muted">(Choose Date)</span></th>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class='col-xs-6' id='graphDiv' style='padding:0'>
             <!-- graph goes here -->

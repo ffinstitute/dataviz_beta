@@ -17,3 +17,18 @@
 .table-condensed-extreme {
     font-size: 10px;
 }
+
+#data-table tr.normal-row > td {
+    font-size: 15px;
+}
+
+.table-condensed, .table-condensed-extreme {
+    margin-bottom: 0;
+}
+
+div.table-wrapper {
+    overflow: auto;
+    height: 220px;
+    border: #a2a2a2 1px solid;
+    border-bottom-color: #e2e2e2;
+}

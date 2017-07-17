@@ -275,8 +275,8 @@ $(document).ready(function () {
             console.info("corr", correlation);
 
             // update
-            $data_table.find(".beta").text(beta.toFixed(4));
-            $data_table.find(".correlation-coefficient").text(correlation.toFixed(4));
+            $(".beta").text(beta.toFixed(4));
+            $(".correlation-coefficient").text(correlation.toFixed(4));
         } else return false;
     }
 
