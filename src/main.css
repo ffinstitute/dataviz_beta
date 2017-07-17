@@ -7,3 +7,13 @@
     stroke: #000;
     stroke-opacity: 0.5;
 }
+
+.table-condensed-extreme > thead > tr > th, .table-condensed-extreme > tbody > tr > th, .table-condensed-extreme > tfoot > tr > th,
+.table-condensed-extreme > thead > tr > td, .table-condensed-extreme > tbody > tr > td,
+.table-condensed-extreme > tfoot > tr > td {
+    padding: 1px;
+}
+
+.table-condensed-extreme {
+    font-size: 10px;
+}
