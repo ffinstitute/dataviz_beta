@@ -32,3 +32,11 @@ div.table-wrapper {
     border: #a2a2a2 1px solid;
     border-bottom-color: #e2e2e2;
 }
+
+tr.text-right th {
+    text-align: right !important;
+}
+
+th.date {
+    width: 59px;
+}
