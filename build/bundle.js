@@ -35935,9 +35935,9 @@ $(document).ready(function () {
                     prev_company_price = company_price;
                     prev_exchange_price = exchange_price;
 
-                    rows.push("<tr class='text-right'><td>" + date_str + "</td><td>" + company_price + "</td><td>"
-                        + (undefined !== company_variation ? company_variation.toFixed(2) : "")
-                        + "</td><td>" + exchange_price + "</td><td>"
+                    rows.push("<tr class='text-right'><td>" + date_str + "</td><td>" + company_price.toFixed(2)
+                        + "</td><td>" + (undefined !== company_variation ? company_variation.toFixed(2) : "")
+                        + "</td><td>" + exchange_price.toFixed(2) + "</td><td>"
                         + (undefined !== exchange_variation ? exchange_variation.toFixed(2) : "" )
                         + "</td></tr>"); // just for dev #TODO: remove table
                 }
