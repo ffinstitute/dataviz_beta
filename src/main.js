@@ -6,10 +6,14 @@ var css = require('./main.css');
 var d3 = require("d3");
 var moment = require("moment");
 var daterangepicker = require("daterangepicker");
+var math_func = require('./math_func.js');
+
+console.log(math_func);
 
 // dev env #TODO: remove these two lines
 window.d3 = d3;
 window.moment = moment;
+window.math_func = math_func;
 
 $(document).ready(function () {
     /**
@@ -141,7 +145,6 @@ $(document).ready(function () {
             .always(function () {
                 displayDatePicker(true);
             });
-
     }
 
     function updateAvailableDateRange(new_min_date, new_max_date) {
@@ -178,7 +181,9 @@ $(document).ready(function () {
             // really displaying
             var prev_company_price, prev_exchange_price,
                 rows = [];
-            company_variations = exchange_variations = diagram_data = []; // empty variation arrays
+            company_variations = [];
+            exchange_variations = [];
+            diagram_data = []; // empty variation arrays
 
             $.each(d3.timeDay.range(moment(start_date), moment(end_date).add(1, "day")), function () {
                 var date_str = moment(this).format("YYYY-MM-DD"),
@@ -188,10 +193,10 @@ $(document).ready(function () {
 
                 if (company_price && exchange_price) { // some dates have no prices, like holidays
                     if (prev_company_price && prev_exchange_price) {
-                        company_variation = (company_price - prev_company_price) / prev_company_price * 100;
-                        // company_variations.push({date: date_str, variation: company_variation});
-                        exchange_variation = (exchange_price - prev_exchange_price) / prev_exchange_price * 100;
-                        // exchange_variations.push({date: date_str, variation: exchange_variation});
+                        company_variation = (company_price / prev_company_price - 1) * 100;
+                        company_variations.push({date: date_str, variation: company_variation});
+                        exchange_variation = (exchange_price / prev_exchange_price - 1) * 100;
+                        exchange_variations.push({date: date_str, variation: exchange_variation});
 
                         diagram_data.push({
                             company_variation: company_variation,
@@ -210,6 +215,7 @@ $(document).ready(function () {
             });
             $data_table.find("tbody").append(rows.reverse());
 
+            calculateAndUpdateValues();
             plotDiagram(diagram_data);
         } else {
             return setTimeout(function () {
@@ -243,6 +249,35 @@ $(document).ready(function () {
                 }
             }
         );
+    }
+
+
+    /**********************
+     * Math Calculation
+     */
+    function calculateAndUpdateValues() {
+        var company_variation_array = company_variations.map(function (obj) {
+                return obj['variation'];
+            }),
+            exchange_variation_array = exchange_variations.map(function (obj) {
+                return obj['variation'];
+            });
+
+        if (company_variation_array && exchange_variation_array && company_variation_array.length === exchange_variation_array.length) {
+            var covariance = math_func.covariance(company_variation_array, exchange_variation_array);
+            console.info("cov", covariance);
+
+            var variance = math_func.variance(exchange_variation_array);
+            console.info("vari", variance);
+
+            var beta = covariance / variance;
+            var correlation = math_func.correlation(company_variation_array, exchange_variation_array);
+            console.info("corr", correlation);
+
+            // update
+            $data_table.find(".beta").text(beta.toFixed(4));
+            $data_table.find(".correlation-coefficient").text(correlation.toFixed(4));
+        } else return false;
     }
 
     /**********************
