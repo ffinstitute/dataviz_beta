@@ -1,6 +1,6 @@
 /vendor/*
 .idea/*
-credential.*
+credential.ini
 node_modules/*
 g
 
