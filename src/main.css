@@ -1,13 +1,6 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.css";
 @import "../node_modules/daterangepicker/daterangepicker.css";
 
-#graphDiv .dot {
-    fill: #FFF;
-    fill-opacity: 0;
-    stroke: #000;
-    stroke-opacity: 0.5;
-}
-
 .table-condensed-extreme > thead > tr > th, .table-condensed-extreme > tbody > tr > th, .table-condensed-extreme > tfoot > tr > th,
 .table-condensed-extreme > thead > tr > td, .table-condensed-extreme > tbody > tr > td,
 .table-condensed-extreme > tfoot > tr > td {
@@ -39,4 +32,43 @@ tr.text-right th {
 
 th.date {
     width: 59px;
+}
+
+/***
+* Diagram
+**/
+
+#tooltip {
+    position: absolute;
+    width: 90px;
+    height: auto;
+    font-size: 10px;
+    padding: 1px 10px;
+    background-color: rgba(0, 0, 0, 0.67);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 100;
+    border: 1px #ababab solid;
+}
+
+#tooltip p {
+    margin: 0;
+    font-size: 12px;
+    white-space: nowrap;
+    color: #FFF;
+}
+
+#graphDiv .dot {
+    fill: #FFF;
+    fill-opacity: 0;
+    stroke: #000;
+    stroke-opacity: 0.5;
+}
+
+#graphDiv .dot.hover {
+    stroke-opacity: 1;
+    fill-opacity:0.9;
+    stroke-width: 2px;
 }

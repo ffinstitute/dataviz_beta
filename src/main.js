@@ -316,6 +316,8 @@ $(document).ready(function () {
         // console.log(data);
         svg.selectAll("circle").remove();
 
+        var dot_radius = 2; //pixels
+
         var x_max_abs = d3.max(data, function (d) {
                 return Math.abs(d['company_variation']);
             }),
@@ -329,7 +331,7 @@ $(document).ready(function () {
         var dots = svg.selectAll("circle").data(data);
 
         dots.enter().append("circle")
-            .attr("r", 2)
+            .attr("r", dot_radius)
             .attr("cx", function (d) {
                 return x(d['company_variation']);
             })
@@ -337,6 +339,30 @@ $(document).ready(function () {
                 return y(d['exchange_variation']);
             })
             .attr("class", "dot")
+            .on("mouseover", function (d) {
+                var $graph_div = $("#graphDiv");
+                var $tooltip = $("#tooltip");
+                var cx = parseFloat(d3.select(this).attr("cx")) + $graph_div.position()['left'] + $tooltip.width() / 2 + 20;
+                var cy = parseFloat(d3.select(this).attr("cy")) + $graph_div.position()['top'] - $tooltip.height() / 2 - 8;
+
+                // handle dot
+                d3.select(this).attr("r", dot_radius * 3).classed("hover", true);
+
+                // handle tooltip
+                d3.select("#tooltip")
+                    .style("left", cx + "px")
+                    .style("top", cy + "px")
+                    .classed("hidden", false)
+                    .select(".date")
+                    .text(d['date']);
+            })
+            .on("mouseout", function () {
+                // handle dot
+                d3.select(this).attr("r", dot_radius).classed("hover", false);
+
+                // hide tooltip
+                d3.select("#tooltip").classed("hidden", true);
+            })
             .merge(dots);
 
         // Add the X Axis
