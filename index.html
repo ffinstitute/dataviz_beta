@@ -7,7 +7,8 @@
     <!--<link rel="stylesheet" href="css/bootstrap.min.css" crossorigin="anonymous">-->
 
     <!-- Font awesome cdn -->
-    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <!-- Use CDN here because fonts are tricky to import using browserify -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 
     <link rel="shortcut icon" href="img/favicon.jpg">
@@ -55,8 +56,8 @@
                 <input type="text" name="start-date" class="form-control" id="start-date" readonly="readonly"
                        placeholder="Start Date"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default set-start-date-min" type="button" title="Set to earliest"><span
-                            class="glyphicon glyphicon-fast-backward"></span></button>
+                    <button class="btn btn-default set-start-date-min" type="button" title="Set to earliest"><i
+                            class="fa fa-fast-backward"></i></button>
                 </span>
             </div>
         </div>
@@ -66,8 +67,8 @@
                 <input type="text" name="end-date" class="form-control" id="end-date" readonly="readonly"
                        placeholder="End Date"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default set-end-date-max" type="button" title="Set to latest"><span
-                            class="glyphicon glyphicon-fast-forward"></span></button>
+                    <button class="btn btn-default set-end-date-max" type="button" title="Set to latest"><i
+                            class="fa fa-fast-forward"></i></button>
                 </span>
             </div>
         </div>
