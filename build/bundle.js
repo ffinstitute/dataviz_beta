@@ -36550,6 +36550,8 @@ $(document).ready(function () {
             y_max_abs = d3.max(data, function (d) {
                 return Math.abs(d['exchange_variation']);
             });
+        x_max_abs = y_max_abs = Math.max(x_max_abs, y_max_abs);
+
         x.domain([-x_max_abs, x_max_abs]);
         y.domain([-y_max_abs, y_max_abs]);
 
