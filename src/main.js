@@ -30,7 +30,8 @@ $(document).ready(function () {
         min_date, max_date,
         diagram_data = [],
         start_date, end_date,
-        beta, correlation;
+        beta, correlation,
+        domain_max = 5;
 
     // initiate date pickers
     $start_date.datepicker({
@@ -432,13 +433,15 @@ $(document).ready(function () {
 
         var dot_radius = 2; //pixels
 
-        var x_max_abs = d3.max(data, function (d) {
+        /*var x_max_abs = d3.max(data, function (d) {
                 return Math.abs(d['exchange_variation']);
             }),
             y_max_abs = d3.max(data, function (d) {
                 return Math.abs(d['company_variation']);
             });
         x_max_abs = y_max_abs = Math.max(x_max_abs, y_max_abs);
+        */
+        x_max_abs = y_max_abs = domain_max;
 
         x.domain([-x_max_abs, x_max_abs]);
         y.domain([-y_max_abs, y_max_abs]);
