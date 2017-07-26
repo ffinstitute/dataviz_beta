@@ -36477,14 +36477,14 @@ $(document).ready(function () {
 
         if (company_variation_array && exchange_variation_array && company_variation_array.length === exchange_variation_array.length) {
             var covariance = math_func.covariance(company_variation_array, exchange_variation_array);
-            console.info("cov", covariance);
+            // console.info("cov", covariance);
 
             var variance = math_func.variance(exchange_variation_array);
-            console.info("vari", variance);
+            // console.info("vari", variance);
 
             beta = covariance / variance;
             correlation = math_func.correlation(company_variation_array, exchange_variation_array);
-            console.info("corr", correlation);
+            // console.info("corr", correlation);
 
             // update
             $(".beta").text(beta.toFixed(4));
