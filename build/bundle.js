@@ -36234,7 +36234,10 @@ $(document).ready(function () {
 
             if (response && response['companies']) {
                 $.each(response['companies'], function () {
-                    $company_select.append("<option class='option' value='" + this['id'] + "'>" + this['symbol'] + "</option>");
+                    var symbol_info = this['name'] ? (" (" + this['name'] + ")") : "";
+
+                    $company_select.append("<option class='option' value='" + this['id'] + "'>" + this['symbol']
+                        + symbol_info + "</option>");
                 });
             }
         });
