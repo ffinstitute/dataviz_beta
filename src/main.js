@@ -219,6 +219,11 @@ $(document).ready(function () {
      * When new date is selected, we check the other date and update accordingly to keep them a valid date range
      */
     function validateAndUpdateSelectedDates(new_start_date, new_end_date, next_func) {
+        if (!selected_company_id || !selected_exchange) {
+            // ignore if company/exchange not selected
+            return false;
+        }
+
         var format = "YYYY-MM-DD";
 
         if (new_start_date) {
@@ -434,13 +439,13 @@ $(document).ready(function () {
         var dot_radius = 2; //pixels
 
         /*var x_max_abs = d3.max(data, function (d) {
-                return Math.abs(d['exchange_variation']);
-            }),
-            y_max_abs = d3.max(data, function (d) {
-                return Math.abs(d['company_variation']);
-            });
-        x_max_abs = y_max_abs = Math.max(x_max_abs, y_max_abs);
-        */
+         return Math.abs(d['exchange_variation']);
+         }),
+         y_max_abs = d3.max(data, function (d) {
+         return Math.abs(d['company_variation']);
+         });
+         x_max_abs = y_max_abs = Math.max(x_max_abs, y_max_abs);
+         */
         x_max_abs = y_max_abs = domain_max;
 
         x.domain([-x_max_abs, x_max_abs]);
