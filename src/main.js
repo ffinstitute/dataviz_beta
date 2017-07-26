@@ -21,6 +21,7 @@ $(document).ready(function () {
         $data_table = $("#data-table"),
         $start_date = $('#start-date'),
         $end_date = $('#end-date'),
+        $loading_overlay = $("div.loading"),
         selected_company_id = 0,
         selected_exchange = "",
         company_prices, exchange_prices,
@@ -249,6 +250,7 @@ $(document).ready(function () {
     }
 
     function calculateVariations(retry_count) {
+        showLoading(true);
         if (retry_count) {
             if (retry_count > 0) retry_count--;
             else return false;
@@ -299,6 +301,8 @@ $(document).ready(function () {
 
             calculateAndUpdateValues();
             plotDiagram(diagram_data);
+
+            showLoading(false);
         } else {
             return setTimeout(function () {
                 calculateVariations(retry_count);
@@ -331,6 +335,16 @@ $(document).ready(function () {
                 }
             }
         );
+    }
+
+    function showLoading(to_show) {
+        var is_hidden_now = $loading_overlay.is(":hidden");
+
+        if (to_show && is_hidden_now) {
+            $loading_overlay.show();
+        } else if (!to_show && !is_hidden_now) {
+            $loading_overlay.hide();
+        }
     }
 
 
