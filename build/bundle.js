@@ -36138,7 +36138,7 @@ var moment = require("moment");
 var datepicker = require("bootstrap-datepicker");
 var math_func = require('./math_func.js');
 
-console.log(math_func);
+// console.log(math_func);
 
 // dev env #TODO: remove these lines
 window.d3 = d3;
@@ -36299,16 +36299,47 @@ $(document).ready(function () {
         /**
          * !!! Caution: the following "StartDate" ans "EndDate" named by the datepicker plugin author means dates that
          * are available to choose from, which is totally different from variables with similar names elsewhere in this
-         * project, e.g. start_date & end_date, which means the dates user actually choose.
+         * project, e.g. start_date & end_date, which means the dates user actually chooses.
          */
         $start_date.datepicker('setStartDate', min_date);
         $start_date.datepicker('setEndDate', max_date);
         $end_date.datepicker('setStartDate', min_date);
         $end_date.datepicker('setEndDate', max_date);
 
-        setStartDate(min_date);
+        setStartDate(limitDateTo(min_date, false, 36));
         setEndDate(max_date);
         calculateVariations();
+    }
+
+
+    /**
+     * @param original_date
+     * @param from_date (string) The date we count days/months ago from. Default to today
+     * @param months_ago
+     * @param days_ago
+     *
+     * Return the earliest date on/after the original_date within days_ago days or months_ago months
+     * Use months_ago only if days_ago is not valid
+     */
+    function limitDateTo(original_date, from_date, months_ago, days_ago) {
+        if (from_date) {
+            from_date = moment(from_date);
+        } else {
+            from_date = moment();
+        }
+        var format = "YYYY-MM-DD";
+        days_ago = Math.floor(days_ago);
+        original_date = moment(original_date);
+        if (days_ago > 0) {
+            return moment.max(original_date, from_date.subtract(days_ago, "days")).format(format)
+        }
+
+        months_ago = Math.floor(months_ago);
+        if (months_ago > 0) {
+            return moment.max(original_date, from_date.subtract(months_ago, "months")).format(format);
+        }
+
+        return false;
     }
 
 
