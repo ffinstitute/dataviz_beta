@@ -36545,10 +36545,10 @@ $(document).ready(function () {
         var dot_radius = 2; //pixels
 
         var x_max_abs = d3.max(data, function (d) {
-                return Math.abs(d['company_variation']);
+                return Math.abs(d['exchange_variation']);
             }),
             y_max_abs = d3.max(data, function (d) {
-                return Math.abs(d['exchange_variation']);
+                return Math.abs(d['company_variation']);
             });
         x_max_abs = y_max_abs = Math.max(x_max_abs, y_max_abs);
 
@@ -36561,10 +36561,10 @@ $(document).ready(function () {
         dots.enter().append("circle")
             .attr("r", dot_radius)
             .attr("cx", function (d) {
-                return x(d['company_variation']);
+                return x(d['exchange_variation']);
             })
             .attr("cy", function (d) {
-                return y(d['exchange_variation']);
+                return y(d['company_variation']);
             })
             .attr("class", "dot")
             .on("mouseover", function (d) {
@@ -36584,8 +36584,8 @@ $(document).ready(function () {
                     .style("top", tooltip_top + "px")
                     .classed("hidden", false)
                     .select(".date")
-                    .html(d['date'] + "<br>(" + parseFloat(d['company_variation']).toFixed(2) + ", "
-                        + parseFloat(d['exchange_variation']).toFixed(2) + ")");
+                    .html(d['date'] + "<br>(" + parseFloat(d['exchange_variation']).toFixed(2) + ", "
+                        + parseFloat(d['company_variation']).toFixed(2) + ")");
             })
             .on("mouseout", function () {
                 // handle dot
