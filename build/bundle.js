@@ -36167,18 +36167,14 @@ $(document).ready(function () {
         format: 'yyyy-mm-dd',
         autoclose: true
     }).on('changeDate', function (e) {
-        start_date = e['date'];
-        validateAndUpdateSelectedDates(start_date);
-        calculateVariations();
+        validateAndUpdateSelectedDates(e['date'], null, calculateVariations);
     });
 
     $end_date.datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true
     }).on('changeDate', function (e) {
-        end_date = e['date'];
-        validateAndUpdateSelectedDates(null, end_date);
-        calculateVariations();
+        validateAndUpdateSelectedDates(null, e['date'], calculateVariations);
     });
 
 
@@ -36347,19 +36343,41 @@ $(document).ready(function () {
     /***
      * @param new_start_date
      * @param new_end_date
+     * @param next_func
      *
      * When new date is selected, we check the other date and update accordingly to keep them a valid date range
      */
-    function validateAndUpdateSelectedDates(new_start_date, new_end_date) {
+    function validateAndUpdateSelectedDates(new_start_date, new_end_date, next_func) {
+        var format = "YYYY-MM-DD";
 
         if (new_start_date) {
-            if (moment(new_start_date) > moment(end_date)) {
-                setEndDate(new_start_date);
+            // validate
+            // TODO
+            if (false /** invalid **/) {
+                return false;
+            }
+
+            start_date = new_start_date;
+
+            if (moment(new_start_date) >= moment(end_date)) {
+                setEndDate(moment(new_start_date).add(1, "days").format(format));
             }
         } else if (new_end_date) {
-            if (moment(start_date) > moment(new_end_date)) {
-                setStartDate(new_end_date);
+            // validate
+            if (false /** invalid **/) {
+                return false;
             }
+
+
+            end_date = new_end_date;
+
+            if (moment(start_date) >= moment(new_end_date)) {
+                setStartDate(moment(new_end_date).subtract(1, "days").format(format));
+            }
+        }
+
+        if (next_func) {
+            next_func();
         }
     }
 
@@ -36598,12 +36616,14 @@ $(document).ready(function () {
 
         // Update line
         svg.selectAll("line").remove();
-        svg.append("line")
-            .attr("x1", x(-x_max_abs))
-            .attr("y1", y(-beta * x_max_abs))
-            .attr("x2", x(x_max_abs)) // variation is change in percentage, which cannot exceed 100
-            .attr("y2", y(beta * x_max_abs))
-            .attr("class", "beta-line");
+        if (beta) {
+            svg.append("line")
+                .attr("x1", x(-x_max_abs))
+                .attr("y1", y(-beta * x_max_abs))
+                .attr("x2", x(x_max_abs)) // variation is change in percentage, which cannot exceed 100
+                .attr("y2", y(beta * x_max_abs))
+                .attr("class", "beta-line");
+        }
 
         // Update the X Axis
         svg.select(".x-axis")
