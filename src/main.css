@@ -1,37 +1,8 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css";
 
-.table-condensed-extreme > thead > tr > th, .table-condensed-extreme > tbody > tr > th, .table-condensed-extreme > tfoot > tr > th,
-.table-condensed-extreme > thead > tr > td, .table-condensed-extreme > tbody > tr > td,
-.table-condensed-extreme > tfoot > tr > td {
-    padding: 1px;
-}
-
-.table-condensed-extreme {
-    font-size: 10px;
-}
-
-#data-table tr.normal-row > td {
-    font-size: 15px;
-}
-
 .table-condensed, .table-condensed-extreme {
     margin-bottom: 0;
-}
-
-div.table-wrapper {
-    overflow: auto;
-    height: 220px;
-    border: #a2a2a2 1px solid;
-    border-bottom-color: #e2e2e2;
-}
-
-tr.text-right th {
-    text-align: right !important;
-}
-
-th.date {
-    width: 59px;
 }
 
 /***

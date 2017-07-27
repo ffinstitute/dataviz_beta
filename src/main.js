@@ -18,7 +18,6 @@ window.math_func = math_func;
 $(document).ready(function () {
     var $company_select = $("#company-select"),
         $exchange_select = $("#exchange-select"),
-        $data_table = $("#data-table"),
         $start_date = $('#start-date'),
         $end_date = $('#end-date'),
         $loading_overlay = $("div.loading"),
@@ -51,10 +50,6 @@ $(document).ready(function () {
 
     // listeners
     $company_select.on('change', function () {
-        // update company name in table
-        $data_table.find("th.company .name").text($(this).find("option:selected").text());
-        $data_table.find("th.company .text-muted").hide();
-
         // update stored data
         selected_company_id = this.value;
 
@@ -74,10 +69,6 @@ $(document).ready(function () {
     });
 
     $exchange_select.on('change', function () {
-        // update exchange name in table
-        $data_table.find("th.exchange .name").text(this.value);
-        $data_table.find("th.exchange .text-muted").hide();
-
         // update stored data
         selected_exchange = this.value;
 
@@ -280,12 +271,9 @@ $(document).ready(function () {
             else return false;
         } else retry_count = 100; // no more retry if fail after 10s
 
-        $data_table.find("tbody").empty();
-
         if (company_prices && exchange_prices) {
             // really displaying
-            var prev_company_price, prev_exchange_price,
-                rows = [];
+            var prev_company_price, prev_exchange_price;
             company_variations = [];
             exchange_variations = [];
             diagram_data = []; // empty variation arrays
@@ -313,15 +301,8 @@ $(document).ready(function () {
 
                     prev_company_price = company_price;
                     prev_exchange_price = exchange_price;
-
-                    rows.push("<tr class='text-right'><td>" + date_str + "</td><td>" + company_price.toFixed(2)
-                        + "</td><td>" + (undefined !== company_variation ? company_variation.toFixed(2) : "")
-                        + "</td><td>" + exchange_price.toFixed(2) + "</td><td>"
-                        + (undefined !== exchange_variation ? exchange_variation.toFixed(2) : "" )
-                        + "</td></tr>"); // just for dev #TODO: remove table
                 }
             });
-            $data_table.find("tbody").append(rows.reverse());
 
             calculateAndUpdateValues();
             plotDiagram(diagram_data);
