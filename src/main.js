@@ -102,10 +102,10 @@ $(document).ready(function () {
 
             if (response && response['companies']) {
                 $.each(response['companies'], function () {
-                    var symbol_info = this['name'] ? (" (" + this['name'] + ")") : "";
+                    var name = this['name'] ? this['name'] : "";
 
-                    $company_select.append("<option class='option' value='" + this['id'] + "'>" + this['symbol']
-                        + symbol_info + "</option>");
+                    $company_select.append("<option class='option' value='" + this['id'] + "'>" + name + " ("
+                        + this['symbol'] + ")" + "</option>");
                 });
             }
         });
