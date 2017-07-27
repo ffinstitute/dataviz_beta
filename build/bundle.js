@@ -36182,6 +36182,10 @@ $(document).ready(function () {
     $company_select.on('change', function () {
         // update stored data
         selected_company_id = this.value;
+        selected_exchange = $(this.options[this.selectedIndex]).data('exchange');
+
+        //update exchange
+        $("#exchange-select").val(selected_exchange);
 
         // update date range picker
         loadAvailableDateRange();
@@ -36225,8 +36229,8 @@ $(document).ready(function () {
                 $.each(response['companies'], function () {
                     var name = this['name'] ? this['name'] : "";
 
-                    $company_select.append("<option class='option' value='" + this['id'] + "'>" + name + " ("
-                        + this['symbol'] + ")" + "</option>");
+                    $company_select.append("<option class='option' value='" + this['id'] + "' data-exchange='"
+                        + this['exchange'] + "'>" + name + " (" + this['symbol'] + ")" + "</option>");
                 });
             }
         });
@@ -36421,6 +36425,14 @@ $(document).ready(function () {
                         company_variations.push({date: date_str, variation: company_variation});
                         exchange_variation = (exchange_price / prev_exchange_price - 1) * 100;
                         exchange_variations.push({date: date_str, variation: exchange_variation});
+
+                        if (isNaN(company_variation)) {
+                            console.warn("Stock Variation NaN");
+                            return;
+                        } else if (isNaN(exchange_variation)) {
+                            console.warn("Exchange Variation NaN");
+                            return;
+                        }
 
                         diagram_data.push({
                             company_variation: company_variation,
