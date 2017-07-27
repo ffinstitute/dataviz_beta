@@ -96,7 +96,7 @@ $(document).ready(function () {
             // console.log(response);
 
             if (response && response['companies']) {
-                $.each(response['companies'], function () {
+                $.each(response['companies'].sort(sortByName), function () {
                     var name = this['name'] ? this['name'] : "";
 
                     $company_select.append("<option class='option' value='" + this['id'] + "' data-exchange='"
@@ -104,6 +104,12 @@ $(document).ready(function () {
                 });
             }
         });
+    }
+
+    function sortByName(a, b) {
+        var aName = a['name'].toLowerCase();
+        var bName = b['name'].toLowerCase();
+        return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
     }
 
     function loadExchanges() {
