@@ -37,6 +37,9 @@ $(document).ready(function () {
         format: 'yyyy-mm-dd',
         autoclose: true
     }).on('changeDate', function (e) {
+        // show loading
+        showLoading(true);
+
         validateAndUpdateSelectedDates(e['date'], null, calculateVariations);
     });
 
@@ -44,12 +47,17 @@ $(document).ready(function () {
         format: 'yyyy-mm-dd',
         autoclose: true
     }).on('changeDate', function (e) {
+        // show loading
+        showLoading(true);
+
         validateAndUpdateSelectedDates(null, e['date'], calculateVariations);
     });
 
 
     // listeners
     $company_select.on('change', function () {
+        // show loading
+        showLoading(true);
         // update stored data
         selected_company_id = this.value;
         selected_exchange = $(this.options[this.selectedIndex]).data('exchange');
@@ -73,6 +81,9 @@ $(document).ready(function () {
     });
 
     $exchange_select.on('change', function () {
+        // show loading
+        showLoading(true);
+
         // update stored data
         selected_exchange = this.value;
 
@@ -275,7 +286,6 @@ $(document).ready(function () {
     }
 
     function calculateVariations(retry_count) {
-        showLoading(true);
         if (retry_count) {
             if (retry_count > 0) retry_count--;
             else return false;
