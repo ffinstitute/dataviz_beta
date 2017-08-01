@@ -36116,7 +36116,7 @@ $(document).ready(function () {
         $("#exchange-select").val(selected_exchange);
 
         // update date range picker
-        if(loadAvailableDateRange()) {
+        if (loadAvailableDateRange()) {
             // pre-load price data
             preLoadPriceData();
         } else {
@@ -36140,7 +36140,7 @@ $(document).ready(function () {
         selected_exchange = this.value;
 
         // update date range picker
-        if(loadAvailableDateRange()) {
+        if (loadAvailableDateRange()) {
             // pre-load price data
             preLoadPriceData();
         } else {
@@ -36361,7 +36361,7 @@ $(document).ready(function () {
                     exchange_price = parseFloat(exchange_prices[date_str]),
                     company_variation, exchange_variation;
 
-                if (company_price && exchange_price && $.isNumeric(company_price), $.isNumeric(exchange_price)) {
+                if (company_price && exchange_price && $.isNumeric(company_price) && $.isNumeric(exchange_price)) {
                     // some dates have no prices, like holidays
                     if (prev_company_price && prev_exchange_price) {
                         company_variation = (company_price / prev_company_price - 1) * 100;
