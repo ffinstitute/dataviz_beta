@@ -36082,7 +36082,9 @@ $(document).ready(function () {
         beta, correlation,
         domain_max = 5,
         $graph_div = $("#graphDiv"),
-        graph_div_width;
+        graph_div_width,
+        company_list,
+        exchange_list;
 
     // initiate date pickers
     $start_date.datepicker({
@@ -36152,7 +36154,7 @@ $(document).ready(function () {
 
     $(window).resize(function () {
         var new_graph_div_width = $graph_div.width();
-        if(new_graph_div_width !== graph_div_width) {
+        if (new_graph_div_width !== graph_div_width) {
             plotDiagram(diagram_data);
             graph_div_width = new_graph_div_width;
         }
@@ -36162,6 +36164,7 @@ $(document).ready(function () {
     // load options
     loadCompanies();
     loadExchanges();
+    initSelections();
 
     // functions
     function loadCompanies() {
@@ -36171,7 +36174,9 @@ $(document).ready(function () {
             // console.log(response);
 
             if (response && response['companies']) {
-                $.each(response['companies'].sort(sortByName), function () {
+                company_list = response['companies'];
+                $company_select.empty();
+                $.each(company_list.sort(sortByName), function () {
                     var name = this['name'] ? this['name'] : "";
 
                     $company_select.append("<option class='option' value='" + this['id'] + "' data-exchange='"
@@ -36194,11 +36199,23 @@ $(document).ready(function () {
             // console.log(response);
 
             if (response && response['exchanges']) {
-                $.each(response['exchanges'], function () {
+                exchange_list = response['exchanges'];
+                $exchange_select.empty();
+                $.each(exchange_list, function () {
                     $exchange_select.append("<option class='option' value='" + this + "'>" + this + "</option>");
                 });
             }
         });
+    }
+
+    function initSelections() {
+        if (company_list && exchange_list) {
+            $company_select.trigger('change');
+        } else {
+            setTimeout(function () {
+                initSelections()
+            }, 100);
+        }
     }
 
     function loadAvailableDateRange() {
