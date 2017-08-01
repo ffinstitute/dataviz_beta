@@ -29,7 +29,9 @@ $(document).ready(function () {
         diagram_data = [],
         start_date, end_date,
         beta, correlation,
-        domain_max = 5;
+        domain_max = 5,
+        $graph_div = $("#graphDiv"),
+        graph_div_width;
 
     // initiate date pickers
     $start_date.datepicker({
@@ -94,6 +96,14 @@ $(document).ready(function () {
             preLoadPriceData();
         } else {
             showLoading(false); // selection not ready, hide loading
+        }
+    });
+
+    $(window).resize(function () {
+        var new_graph_div_width = $graph_div.width();
+        if(new_graph_div_width !== graph_div_width) {
+            plotDiagram(diagram_data);
+            graph_div_width = new_graph_div_width;
         }
     });
 
@@ -415,43 +425,45 @@ $(document).ready(function () {
         } else return false;
     }
 
-    /**********************
-     * D3 Graph
-     */
-    var outer_width = 500,
-        outer_height = 500;
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = outer_width - margin.left - margin.right,
-        height = outer_height - margin.top - margin.bottom;
 
+    /****** Initiate ******/
+    $("#graphDiv").find("svg").remove();
 
-    var x = d3.scaleLinear().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
+    var outer_width, outer_height, width, height, x, y,
+        dot_radius = 3, //pixels
+        margin = {top: 20, right: 20, bottom: 30, left: 50};
 
     // append svg
-    var svg = d3.select("#graphDiv").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .style("margin-left", ($("div.container").width() - outer_width) / 2)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3.select("#graphDiv").append("svg"),
+        g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // Add the X Axis
-    svg.append("g")
-        .attr("transform", "translate(0," + height / 2 + ")")
-        .attr("class", "x-axis");
+    // Add Axis
+    g.append("g").attr("class", "x-axis");
+    g.append("g").attr("class", "y-axis");
+    /**** Initiated ****/
 
-    // Add the Y Axis
-    svg.append("g")
-        .attr("transform", "translate(" + width / 2 + ",0)")
-        .attr("class", "y-axis");
 
     function plotDiagram(data) {
-        // console.log(data);
-        svg.selectAll("circle").remove();
+        if (!data) {
+            return false;
+        }
+        console.info(Date.now() % 100000, "Ploting data")
+        var outer_div_width = $("#graphDiv").width();
+        outer_width = Math.min(Math.max(outer_div_width, 500), 700);
+        outer_height = outer_width;
 
-        var dot_radius = 3; //pixels
+        width = outer_width - margin.left - margin.right;
+        height = outer_height - margin.top - margin.bottom;
+        x = d3.scaleLinear().range([0, width]);
+        y = d3.scaleLinear().range([height, 0]);
+
+        // console.log(data);
+        g.selectAll("circle").remove();
+
+        // update svg
+        svg.attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .style("margin-left", ($("div.container").width() - outer_width) / 2);
 
         /*var x_max_abs = d3.max(data, function (d) {
          return Math.abs(d['exchange_variation']);
@@ -467,7 +479,7 @@ $(document).ready(function () {
         y.domain([-y_max_abs, y_max_abs]);
 
         // Update the scatterplot
-        var dots = svg.selectAll("circle").data(data);
+        var dots = g.selectAll("circle").data(data);
 
         dots.enter().append("circle")
             .attr("r", dot_radius)
@@ -508,9 +520,9 @@ $(document).ready(function () {
             .merge(dots);
 
         // Update line
-        svg.selectAll("line").remove();
+        g.selectAll("line").remove();
         if (beta) {
-            svg.append("line")
+            g.append("line")
                 .attr("x1", x(-x_max_abs))
                 .attr("y1", y(-beta * x_max_abs))
                 .attr("x2", x(x_max_abs)) // variation is change in percentage, which cannot exceed 100
@@ -518,12 +530,13 @@ $(document).ready(function () {
                 .attr("class", "beta-line");
         }
 
-        // Update the X Axis
-        svg.select(".x-axis")
+        // Update Axis
+        g.select(".x-axis")
+            .attr("transform", "translate(0," + height / 2 + ")")
             .call(d3.axisBottom(x));
 
-        // Update the Y Axis
-        svg.select(".y-axis")
+        g.select(".y-axis")
+            .attr("transform", "translate(" + width / 2 + ",0)")
             .call(d3.axisLeft(y));
     }
 });
