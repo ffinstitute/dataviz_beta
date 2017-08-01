@@ -8,6 +8,18 @@
     margin-bottom: 0;
 }
 
+.table-not-full-width {
+    width: auto;
+}
+
+.table-not-full-width.table-condensed > tbody > tr > td, .table-not-full-width.table-condensed > tbody > tr > th {
+    border: none;
+}
+
+#coefficient-table td {
+    background-color: #f7f7f7;
+}
+
 /***
 * Diagram
 **/
