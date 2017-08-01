@@ -66,10 +66,12 @@ $(document).ready(function () {
         $("#exchange-select").val(selected_exchange);
 
         // update date range picker
-        loadAvailableDateRange();
-
-        // pre-load price data
-        preLoadPriceData();
+        if(loadAvailableDateRange()) {
+            // pre-load price data
+            preLoadPriceData();
+        } else {
+            showLoading(false); // selection not ready, hide loading
+        }
     });
 
     $("button.set-start-date-min").click(function () {
@@ -88,10 +90,12 @@ $(document).ready(function () {
         selected_exchange = this.value;
 
         // update date range picker
-        loadAvailableDateRange();
-
-        // pre-load price data
-        preLoadPriceData();
+        if(loadAvailableDateRange()) {
+            // pre-load price data
+            preLoadPriceData();
+        } else {
+            showLoading(false); // selection not ready, hide loading
+        }
     });
 
 
@@ -141,11 +145,13 @@ $(document).ready(function () {
         enableDatePicker(false); //disable when we are getting data
 
         if (selected_company_id <= 0) {
-            return console.info("Company not selected, abort updating date range");
+            console.info("Company not selected, abort updating date range");
+            return false;
         }
 
         if (!selected_exchange) {
-            return console.info("Exchange not selected, abort updating date range");
+            console.info("Exchange not selected, abort updating date range");
+            return false;
         }
 
         // now we have both values
@@ -166,6 +172,7 @@ $(document).ready(function () {
             .always(function () {
                 enableDatePicker(true);
             });
+        return true;
     }
 
     function updateAvailableDateRange(new_min_date, new_max_date) {
