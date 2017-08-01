@@ -36073,6 +36073,7 @@ $(document).ready(function () {
         $loading_overlay = $("div.loading"),
         selected_company_id = 0,
         selected_exchange = "",
+        selected_company_obj,
         company_prices, exchange_prices,
         company_variations = [],
         exchange_variations = [],
@@ -36178,9 +36179,13 @@ $(document).ready(function () {
                 $company_select.empty();
                 $.each(company_list.sort(sortByName), function () {
                     var name = this['name'] ? this['name'] : "";
-
-                    $company_select.append("<option class='option' value='" + this['id'] + "' data-exchange='"
-                        + this['exchange'] + "'>" + name + " (" + this['symbol'] + ")" + "</option>");
+                    var $option = $("<option></option>").addClass('option').val(this['id'])
+                        .data({
+                            exchange: this['exchange'],
+                            name: name,
+                            symbol: this['symbol']
+                        }).text(name + " (" + this['symbol'] + ")");
+                    $company_select.append($option);
                 });
             }
         });
@@ -36495,7 +36500,7 @@ $(document).ready(function () {
 
 
     /****** Initiate ******/
-    $("#graphDiv").find("svg").remove();
+    $graph_div.find("svg").remove();
 
     var outer_width, outer_height, width, height, x, y,
         dot_radius = 4, //pixels
@@ -36516,7 +36521,7 @@ $(document).ready(function () {
             return false;
         }
         console.info(Date.now() % 100000, "Ploting data")
-        var outer_div_width = $("#graphDiv").width();
+        var outer_div_width = $graph_div.width();
         outer_width = Math.min(Math.max(outer_div_width, 500), 700);
         outer_height = outer_width;
 
@@ -36559,24 +36564,32 @@ $(document).ready(function () {
             })
             .attr("class", "dot")
             .on("mouseover", function (d) {
-                var $graph_div = $("#graphDiv");
                 var $tooltip = $("#tooltip");
                 var tooltip_left = parseFloat(d3.select(this).attr("cx")) + $graph_div.position()['left']
-                    + $tooltip.width() / 2 + 25 + parseFloat($graph_div.find("svg").css("margin-left"));
+                    + $tooltip.width() / 2 + 72 + parseFloat($graph_div.find("svg").css("margin-left"));
                 var tooltip_top = parseFloat(d3.select(this).attr("cy")) + $graph_div.position()['top']
-                    - $tooltip.height() / 2 - 25;
+                    - $tooltip.height() / 2 - 73;
+
+                if (tooltip_left > width - 100) {
+                    // might exceed right side of screen, switch to left
+                    tooltip_left -= 179;
+                }
 
                 // handle dot
                 d3.select(this).attr("r", dot_radius * 2.5).classed("hover", true);
 
                 // handle tooltip
-                d3.select("#tooltip")
+                var tooltip = d3.select("#tooltip")
                     .style("left", tooltip_left + "px")
                     .style("top", tooltip_top + "px")
-                    .classed("hidden", false)
-                    .select(".date")
-                    .html(d['date'] + "<br>(" + parseFloat(d['exchange_variation']).toFixed(2) + ", "
-                        + parseFloat(d['company_variation']).toFixed(2) + ")");
+                    .classed("hidden", false);
+
+                tooltip.select(".date").text(d['date']);
+                tooltip.select(".stock .name").text($company_select.find("option:selected").data('symbol'));
+                tooltip.select(".exchange .name").text(selected_exchange);
+                tooltip.select(".stock .value").text(parseFloat(d['company_variation']).toFixed(2) + "%");
+                tooltip.select(".exchange .value").text(parseFloat(d['exchange_variation']).toFixed(2) + "%");
+
             })
             .on("mouseout", function () {
                 // handle dot
