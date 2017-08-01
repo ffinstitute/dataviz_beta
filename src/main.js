@@ -451,7 +451,7 @@ $(document).ready(function () {
         // console.log(data);
         svg.selectAll("circle").remove();
 
-        var dot_radius = 2; //pixels
+        var dot_radius = 3; //pixels
 
         /*var x_max_abs = d3.max(data, function (d) {
          return Math.abs(d['exchange_variation']);
@@ -487,7 +487,7 @@ $(document).ready(function () {
                     - $tooltip.height() / 2 - 25;
 
                 // handle dot
-                d3.select(this).attr("r", dot_radius * 3).classed("hover", true);
+                d3.select(this).attr("r", dot_radius * 2.5).classed("hover", true);
 
                 // handle tooltip
                 d3.select("#tooltip")
