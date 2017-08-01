@@ -3,20 +3,41 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     uglify = require('gulp-uglify'),
     streamify = require('gulp-streamify'),
-    watchify = require('watchify');
+    watchify = require('watchify'),
+    cleanCSS = require('gulp-clean-css'),
+    sourcemaps = require('gulp-sourcemaps'),
+    watch = require('gulp-watch');
 
 
-gulp.task('compile_dev', function () {
+gulp.task('copy-css-dev', function () {
+    return watch('src/**/*.css', function () {
+        gulp.src('src/**/*.css')
+            .pipe(sourcemaps.init())
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest('build'));
+    });
+});
+
+gulp.task('minify-css', function () {
+    return gulp.src('src/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(cleanCSS())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('build'));
+});
+
+
+gulp.task('compile-js-dev', function () {
     // place code for your default task here
     var b = browserify({
-        entries: ['./src/main.js'],
+        entries: ['src/main.js'],
         plugin: [watchify]
-    }).transform('browserify-css', {global: true});
+    });
 
     function bundle() {
         return b.bundle()
             .pipe(source('bundle.js'))
-            .pipe(gulp.dest('./build/'));
+            .pipe(gulp.dest('build/'));
     }
 
     b.on('update', bundle);
@@ -25,12 +46,15 @@ gulp.task('compile_dev', function () {
 });
 
 
-gulp.task('compile_prod', function () {
+gulp.task('compile-js', function () {
     // place code for your default task here
-    return browserify('./src/main.js')
-        .transform('browserify-css', {global: true})
+    return browserify('src/main.js')
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(streamify(uglify()))
-        .pipe(gulp.dest('./build/'));
+        .pipe(gulp.dest('build/'));
 });
+
+
+gulp.task('compile-dev', ['compile-js-dev', 'copy-css-dev']);
+gulp.task('compile', ['compile-js', 'minify-css']);

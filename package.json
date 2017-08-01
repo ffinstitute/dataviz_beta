@@ -13,10 +13,12 @@
   },
   "devDependencies": {
     "browserify": "^14.4.0",
-    "browserify-css": "^0.11.0",
     "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-sourcemaps": "^2.6.0",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^4.3.11",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"
   },

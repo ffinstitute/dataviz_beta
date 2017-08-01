@@ -2,7 +2,6 @@ window.$ = window.jQuery = require('jquery');
 
 require("bootstrap");
 
-var css = require('./main.css');
 var d3 = require("d3");
 var moment = require("moment");
 var datepicker = require("bootstrap-datepicker");
