@@ -18,10 +18,7 @@
     height: auto;
     font-size: 10px;
     padding: 1px 10px;
-    background-color: rgba(0, 0, 0, 0.67);
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    background-color: #000000;
     pointer-events: none;
     z-index: 100;
     border: 1px #ababab solid;
@@ -35,8 +32,8 @@
 }
 
 #graphDiv .dot {
-    fill: #FFF;
-    fill-opacity: 0;
+    fill: #3b5985;
+    fill-opacity: 0.5;
     stroke: #000;
     stroke-opacity: 0.5;
 }
@@ -49,7 +46,15 @@
 
 line.beta-line {
     stroke-width: 2px;
-    stroke: rgba(228, 0, 0, 0.64);
+    stroke: #CC0000;
+}
+
+#graphDiv path.domain {
+    stroke: #DDDDDD;
+}
+
+#graphDiv g.tick text {
+    fill: #808080;
 }
 
 /**
