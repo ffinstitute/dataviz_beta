@@ -32,16 +32,12 @@
 }
 
 #graphDiv .dot {
-    fill: #3b5985;
+    fill: #2c65b9;
     fill-opacity: 0.5;
-    stroke: #000;
-    stroke-opacity: 0.5;
 }
 
 #graphDiv .dot.hover {
-    stroke-opacity: 1;
     fill-opacity: 0.9;
-    stroke-width: 2px;
 }
 
 line.beta-line {

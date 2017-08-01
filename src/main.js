@@ -430,7 +430,7 @@ $(document).ready(function () {
     $("#graphDiv").find("svg").remove();
 
     var outer_width, outer_height, width, height, x, y,
-        dot_radius = 3, //pixels
+        dot_radius = 4, //pixels
         margin = {top: 20, right: 20, bottom: 30, left: 50};
 
     // append svg
