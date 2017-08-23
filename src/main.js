@@ -385,10 +385,12 @@ $(document).ready(function () {
         company_prices = exchange_prices = null; // clean data
 
         if (selected_company_id <= 0) {
+            showLoading(false);
             return console.info("Company not selected, abort updating date range");
         }
 
         if (!selected_exchange) {
+            showLoading(false);
             return console.info("Exchange not selected, abort updating date range");
         }
 
@@ -401,11 +403,11 @@ $(document).ready(function () {
                 if (response && response['success']) {
                     company_prices = response['company_prices'];
                     exchange_prices = response['exchange_prices'];
-
-
                 }
             }
-        );
+        ).always(function () {
+            showLoading(false);
+        });
     }
 
     function showLoading(to_show) {
