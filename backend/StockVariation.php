@@ -17,8 +17,7 @@ class StockVariation
         foreach ($credential_paths as $credential_path) {
             if (file_exists($credential_path)) {
                 $credential = parse_ini_file($credential_path, true);
-            } else {
-                continue;
+                break;
             }
         }
 
