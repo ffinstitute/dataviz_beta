@@ -405,9 +405,7 @@ $(document).ready(function () {
                     exchange_prices = response['exchange_prices'];
                 }
             }
-        ).always(function () {
-            showLoading(false);
-        });
+        );
     }
 
     function showLoading(to_show) {
@@ -464,6 +462,7 @@ $(document).ready(function () {
     // Add Axis
     g.append("g").attr("class", "x-axis");
     g.append("g").attr("class", "y-axis");
+
     /**** Initiated ****/
 
 

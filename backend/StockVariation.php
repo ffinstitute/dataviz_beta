@@ -32,7 +32,7 @@ class StockVariation
 
     function getCompanies()
     {
-        $stmt = $this->db->query('SELECT * FROM `nasdaq`.`companies`;');
+        $stmt = $this->db->query('SELECT * FROM `nasdaq`.`companies` WHERE `id` IN (SELECT DISTINCT(`company_id`) FROM `nasdaq`.`historical_company`);');
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
